@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mariadb
+        version: 10.1.18
+    spec:
+      containers:
+      - name: mariadb
+        image: mariadb:10.1.18
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mariadb
+      volumes:
+      - name: mariadb
+        glusterfs:
+          endpoints: glusterfs
+          path: mariadb
+          readOnly: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  labels:
+    app: mariadb
+    version: 10.1.18
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    name: sql
+  selector:
+    app: mariadb
+    version: 10.1.18

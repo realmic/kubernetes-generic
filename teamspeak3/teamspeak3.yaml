@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: teamspeak3
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: teamspeak3
+        version: 3.0.13.4
+    spec:
+      containers:
+      - name: teamspeak3
+        image: luzifer/teamspeak3:3.0.13.4
+        ports:
+        - containerPort: 9987
+          protocol: UDP
+        - containerPort: 30033
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /teamspeak3
+          name: teamspeak3
+      volumes:
+      - name: teamspeak3
+        glusterfs:
+          endpoints: glusterfs
+          path: teamspeak3
+          readOnly: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: teamspeak3
+  labels:
+    app: teamspeak3
+    version: 3.0.13.4
+spec:
+  ports:
+  - port: 9987
+    protocol: UDP
+    name: tsvoice
+  - port: 30033
+    protocol: TCP
+    name: tsfiles
+  selector:
+    app: teamspeak3
+    version: 3.0.13.4
+  externalIPs:
+    - 192.169.7.138
