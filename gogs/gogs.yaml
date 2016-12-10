@@ -45,15 +45,15 @@ spec:
         - name: data-transfer
           image: realmic/rsync:1.1.0
           command: ["lsyncd", "-nodaemon", "-rsync", "/mnt/local", "/mnt/gluster"]
-        volumeMounts:
-          - mountPath: /mnt/gluster
-            name: gogs
-          - mountPath: /mnt/local
-            name: local
-        lifecycle:
-          preStop:
-            exec:
-              command: ["sleep", "20"]
+          volumeMounts:
+            - mountPath: /mnt/gluster
+              name: gogs
+            - mountPath: /mnt/local
+              name: local
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "20"]
       volumes:
         - name: gogs
           glusterfs:

@@ -12,7 +12,7 @@ spec:
     - hosts:
         - mctherealm.net
         - www.mctherealm.net
-    secretName: mctherealm-tls
+      secretName: mctherealm-tls
   rules:
     - host: mctherealm.net
       http:
