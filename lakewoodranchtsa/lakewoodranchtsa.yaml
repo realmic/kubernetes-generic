@@ -73,8 +73,8 @@ metadata:
   labels:
     service: web
   annotations:
-    kubernetes.io/tls-acme: true
-    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
 spec:
   tls:
     - hosts:
