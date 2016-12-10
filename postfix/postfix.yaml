@@ -2,57 +2,60 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: postfix
+  labels:
+    app: postfix
+    service: mail
+    role: mta
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: postfix
-        version: 1.5.2
+        service: mail
+        role: mta
     spec:
       containers:
-      - name: postfix
-        image: realmic/postfix:1.5.2
-        ports:
-        - containerPort: 25
-          protocol: TCP
-        - containerPort: 587
-          protocol: TCP
-        volumeMounts:
-        - mountPath: /etc/postfix/mysql
-          name: mysql
-        - mountPath: /etc/postfix/tls
-          name: tls
-        env:
-        - name: NODE_HOSTNAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
+        - name: postfix
+          image: realmic/postfix:1.5.2
+          ports:
+            - containerPort: 25
+              protocol: TCP
+            - containerPort: 587
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/postfix/mysql
+              name: mysql
+            - mountPath: /etc/postfix/tls
+              name: tls
+          env:
+            - name: NODE_HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
       volumes:
-      - name: mysql
-        secret:
-          secretName: postfix
-      - name: tls
-        secret:
-          secretName: prod-tls
+        - name: mysql
+          secret:
+            secretName: postfix
+        - name: tls
+          secret:
+            secretName: prod-tls
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: postfix
   labels:
-    app: postfix
-    version: 10.1.18
+    service: mail
 spec:
   ports:
-  - port: 25
-    protocol: TCP
-    name: smtp
-  - port: 587
-    protocol: TCP
-    name: submission
+    - port: 25
+      protocol: TCP
+      name: smtp
+    - port: 587
+      protocol: TCP
+      name: submission
   selector:
     app: postfix
-    version: 1.5.2
   externalIPs:
-  - 192.169.7.138
+    - 192.169.7.138
