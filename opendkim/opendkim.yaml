@@ -2,40 +2,43 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: opendkim
+  labels:
+    app: opendkim
+    service: mail
+    role: dkim
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: opendkim
-        version: 1.3.0
+        service: mail
+        role: dkim
     spec:
       containers:
-      - name: opendkim
-        image: realmic/opendkim:1.3.0
-        ports:
-        - containerPort: 12345
-          protocol: TCP
-        volumeMounts:
-        - mountPath: /etc/dkimkeys
-          name: opendkim
+        - name: opendkim
+          image: realmic/opendkim:1.3.0
+          ports:
+            - containerPort: 12345
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/dkimkeys
+              name: opendkim
       volumes:
-      - name: opendkim
-        secret:
-          secretName: opendkim
+        - name: opendkim
+          secret:
+            secretName: opendkim
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: opendkim
   labels:
-    app: opendkim
-    version: 1.3.0
+    service: mail
 spec:
   ports:
-  - port: 12345
-    protocol: TCP
-    name: opendkim
+    - port: 12345
+      protocol: TCP
+      name: opendkim
   selector:
     app: opendkim
-    version: 1.3.0
