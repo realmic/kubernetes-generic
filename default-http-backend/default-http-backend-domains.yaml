@@ -3,26 +3,28 @@ kind: Ingress
 metadata:
   name: mctherealm
   annotations:
-    kubernetes.io/tls-acme: "true"
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: true
+    kubernetes.io/ingress.class: nginx
+  labels:
+    service: web
 spec:
   tls:
-  - hosts:
-    - mctherealm.net
-    - www.mctherealm.net
+    - hosts:
+        - mctherealm.net
+        - www.mctherealm.net
     secretName: mctherealm-tls
   rules:
-  - host: mctherealm.net
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: default-http-backend
-          servicePort: 80
-  - host: www.mctherealm.net
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: default-http-backend
-          servicePort: 80
+    - host: mctherealm.net
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: default-http-backend
+              servicePort: 80
+    - host: www.mctherealm.net
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: default-http-backend
+              servicePort: 80
