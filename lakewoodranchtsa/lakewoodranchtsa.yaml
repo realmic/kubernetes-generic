@@ -2,86 +2,89 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: lakewoodranchtsa
+  labels:
+    app: lakewoodranchtsa
+    service: web
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: lakewoodranchtsa
-        version: 0.6.0
+        service: web
     spec:
       containers:
-      - name: lakewoodranchtsa
-        image: froger/lakewoodranchtsa:0.6.0
-        env:
-          - name: MYSQL_DATABASE
-            valueFrom:
-              secretKeyRef:
-                name: lakewoodranchtsa
-                key: mysql-database
-          - name: MYSQL_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: lakewoodranchtsa
-                key: mysql-username
-          - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: lakewoodranchtsa
-                key: mysql-password
-          - name: SECRET_KEY_BASE
-            valueFrom:
-              secretKeyRef:
-                name: lakewoodranchtsa
-                key: secret-key-base
-          - name: MAIL_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: lakewoodranchtsa
-                key: mail-username
-          - name: MAIL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: lakewoodranchtsa
-                key: mail-password
-        ports:
-        - containerPort: 9292
-          protocol: TCP
+        - name: lakewoodranchtsa
+          image: froger/lakewoodranchtsa:0.6.0
+          env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: lakewoodranchtsa
+                  key: mysql-database
+            - name: MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: lakewoodranchtsa
+                  key: mysql-username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lakewoodranchtsa
+                  key: mysql-password
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: lakewoodranchtsa
+                  key: secret-key-base
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: lakewoodranchtsa
+                  key: mail-username
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lakewoodranchtsa
+                  key: mail-password
+          ports:
+            - containerPort: 9292
+              protocol: TCP
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: lakewoodranchtsa
   labels:
-    app: lakewoodranchtsa
-    version: 0.6.0
+    service: web
 spec:
   ports:
-  - port: 80
-    targetPort: 9292
-    protocol: TCP
-    name: http
+    - port: 80
+      targetPort: 9292
+      protocol: TCP
+      name: http
   selector:
     app: lakewoodranchtsa
-    version: 0.6.0
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: lakewoodranchtsa
+  labels:
+    service: web
   annotations:
-    kubernetes.io/tls-acme: "true"
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: true
+    kubernetes.io/ingress.class: nginx
 spec:
   tls:
-  - hosts:
-    - tsa.lrhsclubs.com
-    secretName: lakewoodranchtsa-tls
+    - hosts:
+        - tsa.lrhsclubs.com
+      secretName: lakewoodranchtsa-tls
   rules:
-  - host: tsa.lrhsclubs.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: lakewoodranchtsa
-          servicePort: 80
+    - host: tsa.lrhsclubs.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: lakewoodranchtsa
+              servicePort: 80
