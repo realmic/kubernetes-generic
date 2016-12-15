@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: lakewoodleaders
-          image: froger/lakewoodleaders:0.6.0
+          image: froger/lakewoodleaders:0.7.0
           env:
             - name: MYSQL_DATABASE
               valueFrom:
