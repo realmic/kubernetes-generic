@@ -12,24 +12,6 @@ spec:
       labels:
         app: gogs
         service: git
-      annotations:
-        pod.alpha.kubernetes.io/init-containers: '[
-          {
-            "name": "setup",
-            "image": "realmic/rsync:1.1.0",
-            "command": ["rsync", "-a", "--delete", "/mnt/gluster/", "/mnt/local/"],
-            "volumeMounts": [
-              {
-                "name": "gogs",
-                "mountPath": "/mnt/gluster"
-              },
-              {
-                "name": "local",
-                "mountPath": "/mnt/local"
-              }
-            ]
-          }
-        ]'
     spec:
       containers:
         - name: gogs
@@ -41,43 +23,11 @@ spec:
               protocol: TCP
           volumeMounts:
             - mountPath: /data
-              name: local
-        - name: data-transfer
-          image: realmic/rsync:1.1.0
-          command: ["lsyncd", "-nodaemon", "-rsync", "/mnt/local", "/mnt/gluster"]
-          volumeMounts:
-            - mountPath: /mnt/gluster
               name: gogs
-            - mountPath: /mnt/local
-              name: local
-          lifecycle:
-            preStop:
-              exec:
-                command: ["sleep", "20"]
       volumes:
         - name: gogs
-          glusterfs:
-            endpoints: glusterfs
-            path: gogs
-            readOnly: false
-        - name: local
-          emptyDir: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: gogs-ssh
-  labels:
-    service: git
-spec:
-  ports:
-    - port: 22
-      protocol: TCP
-      name: ssh
-  selector:
-    app: gogs
-  externalIPs:
-    - 192.169.7.138
+          persistentVolumeClaim:
+            claimName: gogs
 ---
 apiVersion: v1
 kind: Service
@@ -87,6 +37,9 @@ metadata:
     service: git
 spec:
   ports:
+    - port: 22
+      protocol: TCP
+      name: ssh
     - port: 80
       targetPort: 3000
       protocol: TCP
