@@ -36,10 +36,8 @@ spec:
               name: sql
       volumes:
         - name: mail
-          glusterfs:
-            endpoints: glusterfs
-            path: mail
-            readOnly: false
+          persistentVolumeClaim:
+            claimName: mail
         - name: ssl
           secret:
             secretName: prod-tls
