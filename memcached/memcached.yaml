@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: memcached
-          image: memcached:1.4.32-alpine
+          image: memcached:1.4.34-alpine
           ports:
             - containerPort: 11211
               protocol: TCP
