@@ -58,4 +58,4 @@ spec:
   selector:
     app: postfix
   externalIPs:
-    - 192.169.7.138
+    - 10.0.0.6
