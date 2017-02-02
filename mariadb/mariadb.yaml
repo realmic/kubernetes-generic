@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: mariadb
-          image: mariadb:10.1.18
+          image: mariadb:10.1.21
           ports:
             - containerPort: 3306
               protocol: TCP
@@ -24,10 +24,8 @@ spec:
               name: mariadb
       volumes:
         - name: mariadb
-          glusterfs:
-            endpoints: glusterfs
-            path: mariadb
-            readOnly: false
+          persistentVolumeClaim:
+            claimName: mariadb
 ---
 apiVersion: v1
 kind: Service
