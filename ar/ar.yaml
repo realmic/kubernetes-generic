@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ar
+  labels:
+    app: ar
+    service: web
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ar
+        service: web
+    spec:
+      containers:
+        - name: ar
+          image: froger/ar:0.1.0
+          ports:
+            - containerPort: 80
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ar
+  labels:
+    service: web
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: ar
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ar
+  labels:
+    service: web
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - ar.lrhstsa.com
+      secretName: ar-tls
+  rules:
+    - host: ar.lrhstsa.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: ar
+              servicePort: 80
