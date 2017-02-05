@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: lakewoodranchtsa
-          image: froger/lakewoodranchtsa:1.2.1
+          image: froger/lakewoodranchtsa:1.3.0
           env:
             - name: MYSQL_DATABASE
               valueFrom:
