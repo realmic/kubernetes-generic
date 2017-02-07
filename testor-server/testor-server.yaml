@@ -1,0 +1,90 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: testor-server
+  labels:
+    app: testor-server
+    service: web
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: testor-server
+        service: web
+    spec:
+      containers:
+        - name: testor-server
+          image: lrhstsa/testor-server:0.5.0
+          env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: testor-server
+                  key: mysql-database
+            - name: MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: testor-server
+                  key: mysql-username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: testor-server
+                  key: mysql-password
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: testor-server
+                  key: secret-key-base
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: testor-server
+                  key: mail-username
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: testor-server
+                  key: mail-password
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: testor-server
+  labels:
+    service: web
+spec:
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: http
+  selector:
+    app: testor-server
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: testor-server
+  labels:
+    service: web
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - testor.lrhstsa.com
+      secretName: testor-server-tls
+  rules:
+    - host: testor.lrhstsa.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: testor-server
+              servicePort: 80
