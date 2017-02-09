@@ -16,8 +16,13 @@ spec:
     spec:
       containers:
         - name: testor-server
-          image: lrhstsa/testor-server:0.5.0
+          image: lrhstsa/testor-server:0.7.0
           env:
+            - name: MYSQL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: testor-server
+                  key: mysql-host
             - name: MYSQL_DATABASE
               valueFrom:
                 secretKeyRef:
