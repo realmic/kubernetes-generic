@@ -18,6 +18,11 @@ spec:
         - name: testor-server
           image: lrhstsa/testor-server:0.8.3
           env:
+            - name: WEBSITE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: testor-server
+                  key: website-host
             - name: MYSQL_HOST
               valueFrom:
                 secretKeyRef:
