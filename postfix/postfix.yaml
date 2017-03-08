@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: postfix
-          image: realmic/postfix:1.5.2
+          image: realmic/postfix:1.6.0
           ports:
             - containerPort: 25
               protocol: TCP
@@ -29,11 +29,6 @@ spec:
               name: mysql
             - mountPath: /etc/postfix/tls
               name: tls
-          env:
-            - name: NODE_HOSTNAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
       volumes:
         - name: mysql
           secret:
