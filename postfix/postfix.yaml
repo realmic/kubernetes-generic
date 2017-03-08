@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: postfix
-          image: realmic/postfix:1.6.0
+          image: realmic/postfix:1.6.1
           ports:
             - containerPort: 25
               protocol: TCP
