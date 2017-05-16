@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: ar
-          image: lrhstsa/ar:1.1.4
+          image: lrhstsa/ar:1.2.1
           ports:
             - containerPort: 80
               protocol: TCP
