@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: lakewoodranchtsa
-          image: lrhstsa/lakewoodranchtsa:1.6.0
+          image: lrhstsa/lakewoodranchtsa:1.7.0
           env:
             - name: MYSQL_DATABASE
               valueFrom:
