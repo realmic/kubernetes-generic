@@ -6,7 +6,6 @@ metadata:
     app: lakewoodleaders
     service: web
 spec:
-  replicas: 1
   revisionHistoryLimit: 2
   template:
     metadata:
@@ -16,7 +15,14 @@ spec:
     spec:
       containers:
         - name: lakewoodleaders
-          image: realmicprojects/lakewoodleaders:0.11.2
+          image: realmicprojects/lakewoodleaders:1.0.0
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "250m"
+            limits:
+              memory: "500Mi"
+              cpu: "250m"
           env:
             - name: MYSQL_DATABASE
               valueFrom:

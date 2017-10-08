@@ -6,7 +6,6 @@ metadata:
     app: lakewoodranchtsa
     service: web
 spec:
-  replicas: 1
   revisionHistoryLimit: 2
   template:
     metadata:
@@ -17,6 +16,13 @@ spec:
       containers:
         - name: lakewoodranchtsa
           image: lrhstsa/lakewoodranchtsa:1.7.1
+          resources:
+            requests:
+              memory: "600Mi"
+              cpu: "250m"
+            limits:
+              memory: "600Mi"
+              cpu: "250m"
           env:
             - name: MYSQL_DATABASE
               valueFrom:
