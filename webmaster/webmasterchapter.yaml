@@ -1,0 +1,60 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webmasterchapter
+  labels:
+    app: webmasterchapter
+    service: web
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  template:
+    metadata:
+      labels:
+        app: webmasterchapter
+        service: web
+    spec:
+      containers:
+        - name: webmasterchapter
+          image: lrhstsa/webmasterchapter:0.1.0
+          ports:
+            - containerPort: 80
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webmasterchapter
+  labels:
+    service: web
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: webmasterchapter
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: webmasterchapter
+  labels:
+    service: web
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - lrhstsa.com
+      secretName: webmasterchapter-tls
+  rules:
+    - host: lrhstsa.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: webmasterchapter
+              servicePort: 80
