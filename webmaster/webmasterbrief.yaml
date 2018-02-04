@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: webmasterbrief
-          image: lrhstsa/webmasterbrief:0.1.0
+          image: lrhstsa/webmasterbrief:1.0.0
           ports:
             - containerPort: 80
               protocol: TCP
