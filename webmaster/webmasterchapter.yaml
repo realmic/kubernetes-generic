@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: webmasterchapter
-          image: lrhstsa/webmasterchapter:2.2.2
+          image: lrhstsa/webmasterchapter:2.3.0
           ports:
             - containerPort: 5000
               protocol: TCP
